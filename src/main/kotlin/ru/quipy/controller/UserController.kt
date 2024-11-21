@@ -29,7 +29,8 @@ class UserController(
              }
     }
 
-    @GetMapping("/{userId}")
+
+    @GetMapping("/{userName}")
     fun getAccount(@PathVariable userId: UUID) : UserAggregateState? {
         return userEsService.getState(userId)
     }

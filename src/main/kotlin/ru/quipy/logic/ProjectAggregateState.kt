@@ -1,8 +1,13 @@
 package ru.quipy.logic
 
+
+import javax.persistence.*
 import ru.quipy.api.*
 import ru.quipy.core.annotations.StateTransitionFunc
 import ru.quipy.domain.AggregateState
+import ru.quipy.projections.entity.ParticipantEntity
+import ru.quipy.projections.entity.TaskEntity
+import ru.quipy.projections.entity.TaskStatusEntity
 import java.util.*
 import kotlin.collections.mutableMapOf
 
@@ -101,21 +106,4 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
     }
 }
 
-data class TaskEntity(
-    val id: UUID = UUID.randomUUID(),
-    val name: String,
-    val taskStatusesAssigned: MutableSet<UUID>,
-    val performersAssigned: MutableSet<UUID>
-)
 
-data class TaskStatusEntity(
-    val id: UUID = UUID.randomUUID(),
-    val name: String,
-    val colour: String,
-)
-
-data class ParticipantEntity(
-    val id: UUID = UUID.randomUUID(),
-    val username: String,
-    val fullName: String,
-)

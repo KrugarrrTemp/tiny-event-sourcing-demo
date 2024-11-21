@@ -14,19 +14,15 @@ import ru.quipy.api.TaskStatusAssignedToTaskEvent
 import ru.quipy.api.ParticipantAddedEvent
 import ru.quipy.api.PerformerAddedToTaskEvent
 import ru.quipy.core.EventSourcingService
-import ru.quipy.logic.ProjectAggregateState
-import ru.quipy.logic.addTask
-import ru.quipy.logic.create
-import ru.quipy.logic.createTaskStatus
-import ru.quipy.logic.assignTaskStatusToTask
-import ru.quipy.logic.addParticipant
-import ru.quipy.logic.addPerformerToTask
+import ru.quipy.logic.*
 import java.util.*
 
 @RestController
 @RequestMapping("/projects")
 class ProjectController(
-    val projectEsService: EventSourcingService<UUID, ProjectAggregate, ProjectAggregateState>
+    val projectEsService: EventSourcingService<UUID, ProjectAggregate, ProjectAggregateState>,
+    val gatewayService: GatewayService
+
 ) {
     @PostMapping("create")
     fun createProject(
@@ -41,8 +37,8 @@ class ProjectController(
     }
 
     @GetMapping("/{projectId}")
-    fun getProject(@PathVariable projectId: UUID) : ProjectAggregateState? {
-        return projectEsService.getState(projectId)
+    fun getProject(@PathVariable projectId: UUID) : ProjectWithParticipants? {
+        return gatewayService.getProjectWithParticipants(projectId)
     }
 
     @PostMapping("/{projectId}/tasks/create")

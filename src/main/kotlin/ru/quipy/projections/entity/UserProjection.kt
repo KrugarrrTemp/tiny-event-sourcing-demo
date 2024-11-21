@@ -1,8 +1,10 @@
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
+package ru.quipy.projections.entity
+
 import java.util.UUID
+import javax.persistence.*
 
 @Entity
+@Table(name = "user_projection", schema = "task_manager")
 class UserProjection() {
     @Id
     lateinit var userId: UUID

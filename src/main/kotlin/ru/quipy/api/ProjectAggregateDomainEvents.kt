@@ -2,8 +2,8 @@ package ru.quipy.api
 
 import ru.quipy.core.annotations.DomainEvent
 import ru.quipy.domain.Event
-import ru.quipy.logic.TaskStatusEntity
-import ru.quipy.logic.ParticipantEntity
+import ru.quipy.projections.entity.ParticipantEntity
+import ru.quipy.projections.entity.TaskStatusEntity
 import java.util.*
 import kotlin.collections.mutableMapOf
 
@@ -17,14 +17,14 @@ const val PERFORMER_ADDED_TO_TASK_EVENT = "PERFORMER_ADDED_TO_TASK_EVENT"
 // API
 @DomainEvent(name = PROJECT_CREATED_EVENT)
 class ProjectCreatedEvent(
-    val projectId: UUID,
-    val projectName: String,
-    val description: String,
-    val authorUsername: String,
-    val authorFullName: String,
-    val taskStatuses: MutableMap<UUID, TaskStatusEntity>,
-    val participants: MutableMap<UUID, ParticipantEntity>,
-    createdAt: Long = System.currentTimeMillis(),
+        val projectId: UUID,
+        val projectName: String,
+        val description: String,
+        val authorUsername: String,
+        val authorFullName: String,
+        val taskStatuses: MutableMap<UUID, TaskStatusEntity>,
+        val participants: MutableMap<UUID, ParticipantEntity>,
+        createdAt: Long = System.currentTimeMillis(),
 ) : Event<ProjectAggregate>(
     name = PROJECT_CREATED_EVENT,
     createdAt = createdAt,

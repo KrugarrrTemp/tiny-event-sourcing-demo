@@ -1,18 +1,18 @@
 package ru.quipy.projections
 
-import UserProjection
+import ru.quipy.projections.entity.UserProjection
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Component
 import ru.quipy.api.UserAggregate
 import ru.quipy.api.UserRegisteredEvent
 import ru.quipy.projections.repository.UserProjectionRepository
 import ru.quipy.streams.annotation.AggregateSubscriber
 import ru.quipy.streams.annotation.SubscribeEvent
 
-@Service
+@Component
 @AggregateSubscriber(
-    aggregateClass = UserAggregate::class, subscriberName = "user-subs-stream"
+        aggregateClass = UserAggregate::class, subscriberName = "user-subs-stream"
 )
 class AnnotationBasedUserEventsSubscriber (private val userProjectionRepository: UserProjectionRepository) {
 
