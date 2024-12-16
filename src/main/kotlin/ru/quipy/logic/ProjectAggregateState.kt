@@ -1,13 +1,8 @@
 package ru.quipy.logic
 
-
-import javax.persistence.*
 import ru.quipy.api.*
 import ru.quipy.core.annotations.StateTransitionFunc
 import ru.quipy.domain.AggregateState
-import ru.quipy.projections.entity.ParticipantEntity
-import ru.quipy.projections.entity.TaskEntity
-import ru.quipy.projections.entity.TaskStatusEntity
 import java.util.*
 import kotlin.collections.mutableMapOf
 
@@ -47,10 +42,10 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
     @StateTransitionFunc
     fun taskCreatedApply(event: TaskCreatedEvent) {
         tasks[event.taskId] = TaskEntity(
-            id = event.taskId,
-            name = event.taskName,
-            taskStatusesAssigned = withDefaultTaskStatusUuid(),
-            performersAssigned = mutableSetOf<UUID>())
+                id = event.taskId,
+                name = event.taskName,
+                taskStatusesAssigned = withDefaultTaskStatusUuid(),
+                performersAssigned = mutableSetOf<UUID>())
         updatedAt = createdAt
     }
 
@@ -58,10 +53,10 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
     @StateTransitionFunc
     fun taskStatusAssignedApply(event: TaskStatusAssignedToTaskEvent) {
         tasks[event.taskId]?.taskStatusesAssigned?.add(event.taskStatusId)
-            ?: throw IllegalArgumentException("No such task: ${event.taskId}")
+                ?: throw IllegalArgumentException("No such task: ${event.taskId}")
         updatedAt = createdAt
     }
-    
+
     @StateTransitionFunc
     fun participantAddedApply(event: ParticipantAddedEvent) {
         if (participants.values.any { it.username == event.participantUsername }) {
@@ -77,7 +72,7 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
             throw IllegalArgumentException("No such participant: ${event.participantId}")
         }
         tasks[event.taskId]?.performersAssigned?.add(event.participantId)
-            ?: throw IllegalArgumentException("No such task: ${event.taskId}")
+                ?: throw IllegalArgumentException("No such task: ${event.taskId}")
         updatedAt = createdAt
     }
 
@@ -106,4 +101,21 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
     }
 }
 
+data class TaskEntity(
+        val id: UUID = UUID.randomUUID(),
+        val name: String,
+        val taskStatusesAssigned: MutableSet<UUID>,
+        val performersAssigned: MutableSet<UUID>
+)
 
+data class TaskStatusEntity(
+        val id: UUID = UUID.randomUUID(),
+        val name: String,
+        val colour: String,
+)
+
+data class ParticipantEntity(
+        val id: UUID = UUID.randomUUID(),
+        val username: String,
+        val fullName: String,
+)

@@ -11,12 +11,15 @@ import ru.quipy.core.EventSourcingService
 import ru.quipy.logic.UserAggregateState
 import ru.quipy.logic.register
 import ru.quipy.api.UserRegisteredEvent
+import ru.quipy.projections.UserProjectionsService
+import ru.quipy.projections.entity.UserProjection
 import java.util.*
 
 @RestController
 @RequestMapping("/users")
 class UserController(
-    val userEsService: EventSourcingService<UUID, UserAggregate, UserAggregateState>
+    val userEsService: EventSourcingService<UUID, UserAggregate, UserAggregateState>,
+    val userProjectionService: UserProjectionsService
 ) {
 
     @PostMapping("/register")
@@ -31,7 +34,7 @@ class UserController(
 
 
     @GetMapping("/{userName}")
-    fun getAccount(@PathVariable userId: UUID) : UserAggregateState? {
-        return userEsService.getState(userId)
+    fun getAccount(@PathVariable("userName") username: String): UserProjection? {
+        return userProjectionService.getUserByUserName(username)
     }
 }

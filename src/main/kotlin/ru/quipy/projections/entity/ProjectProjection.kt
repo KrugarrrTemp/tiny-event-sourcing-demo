@@ -6,26 +6,19 @@ import javax.print.attribute.standard.RequestingUserName
 
 @Entity
 @Table(name = "project_projection", schema = "task_manager")
-class ProjectProjection(
-        @Id
-        val id: UUID,
-        val name: String,
-        val description: String,
-        val authorUserName: String,
+class ProjectProjection() {
+    @Id
+    lateinit var id: UUID
+    lateinit var name: String
+    lateinit var description: String
+    lateinit var authorUserName: String
+    lateinit var authorName: String
 
-        @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
-        val tasks: MutableList<TaskEntity> = mutableListOf(),
-
-        @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
-        val taskStatuses: MutableList<TaskStatusEntity> = mutableListOf(),
-
-        @OneToMany(mappedBy = "project", cascade = [CascadeType.ALL], orphanRemoval = true)
-        val participants: MutableList<ParticipantEntity> = mutableListOf()
-) {
-    constructor() : this(
-            id = UUID.randomUUID(),
-            name = "",
-            description = "",
-            authorUserName = ""
-    )
+    constructor(id: UUID, name: String, description: String, authorUserName: String, authorName: String) : this() {
+        this.id = id
+        this.name = name
+        this.description = description
+        this.authorUserName = authorUserName
+        this.authorName = authorName
+    }
 }

@@ -15,13 +15,18 @@ import ru.quipy.api.ParticipantAddedEvent
 import ru.quipy.api.PerformerAddedToTaskEvent
 import ru.quipy.core.EventSourcingService
 import ru.quipy.logic.*
+import ru.quipy.projections.ProjectProjectionsService
+import ru.quipy.projections.entity.ParticipantProjection
+import ru.quipy.projections.entity.ProjectProjection
+import ru.quipy.projections.entity.TaskProjection
+import ru.quipy.projections.entity.TaskStatusProjection
 import java.util.*
 
 @RestController
 @RequestMapping("/projects")
 class ProjectController(
     val projectEsService: EventSourcingService<UUID, ProjectAggregate, ProjectAggregateState>,
-    val gatewayService: GatewayService
+    val gatewayService: GatewayService,
 
 ) {
     @PostMapping("create")
@@ -37,9 +42,31 @@ class ProjectController(
     }
 
     @GetMapping("/{projectId}")
-    fun getProject(@PathVariable projectId: UUID) : ProjectWithParticipants? {
+    fun getProjectById(@PathVariable projectId: UUID) : ProjectWithParticipants? {
         return gatewayService.getProjectWithParticipants(projectId)
     }
+
+    @GetMapping("/author/{userName}")
+    fun findProjectsByAuthor(@PathVariable userName: String) : List<ProjectProjection>? {
+        return gatewayService.getProjectsByAuthor(userName)
+    }
+
+    @GetMapping("/participant/{projectId}/{userName}")
+    fun findParticipant(@PathVariable projectId: UUID, @PathVariable userName: String) : ParticipantProjection? {
+        return gatewayService.findParticipant(projectId, userName)
+    }
+
+    @GetMapping("/status/{projectId}")
+    fun findAllStatuses(@PathVariable projectId: UUID) : List<TaskStatusProjection>? {
+        return gatewayService.findAllStatuses(projectId)
+    }
+
+    @GetMapping("/task/{projectId}/{statusName}")
+    fun findAllTasksWithConcreteStatus(@PathVariable projectId: UUID, @PathVariable statusName: String) : List<TaskProjection>? {
+        return gatewayService.findAllTasksWithConcreteStatus(projectId, statusName)
+    }
+
+
 
     @PostMapping("/{projectId}/tasks/create")
     fun createTask(@PathVariable projectId: UUID, @RequestParam(required = true, value = "taskName") taskName: String) : TaskCreatedEvent {

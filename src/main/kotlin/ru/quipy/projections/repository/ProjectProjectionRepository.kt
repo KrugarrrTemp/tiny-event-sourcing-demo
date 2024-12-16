@@ -6,4 +6,7 @@ import ru.quipy.projections.entity.ProjectProjection
 import java.util.UUID
 
 @Repository
-interface ProjectProjectionRepository : JpaRepository<ProjectProjection, UUID>
+interface ProjectProjectionRepository : JpaRepository<ProjectProjection, UUID> {
+    fun findAllByAuthorUserName(userName: String): List<ProjectProjection>
+}
+
